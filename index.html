@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body onselect="return false;">
+    <div class="wrap">
+        <div class="photo photo_front" onclick="trun(this)" id="photo_{{index}}">
+            <div class="photo-wrap">
+                <div class="side side-front">
+                    <p class="image"><img src="image/{{img}}" alt=""></p>
+                    <p class="caption">{{caption}}</p>
+                </div>
+                <div class="side side-back">
+                    <p class="desc">{{desc}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="image/data.js"></script>
+    <script>
+    var wrap;
+    window.onload = function() {
+        /*设置高度，使得photo居中*/
+        wrap = document.querySelector('.wrap');
+        wrap.style.height = document.documentElement.clientHeight + 'px';
+        addPhotos();
+    };
+
+    /*随机生成 range数组中之间的数*/
+    function random(range) {
+        var max = Math.max(range[0], range[1]);
+        var min = Math.min(range[0], range[1]);
+
+        var diff = max - min; //差值
+        var num = Math.ceil((Math.random() * diff + min));
+        return num;
+    }
+
+    // 排序海报
+    function rsortPhoto(n) {
+        var photo_center = document.querySelector('#photo_' + n);
+        photo_center.className += ' photo_center';
+    }
+     
+    // var data=data;
+    /*遍历所有海报*/
+    function addPhotos() {
+        var template = wrap.innerHTML;
+
+        var html = [];
+        for (i in data) {
+            var _html = template
+                .replace('{{index}}', i)
+                .replace('{{img}}', data[i].img)
+                .replace('{{caption}}', data[i].caption)
+                .replace('{{desc}}', data[i].desc);
+            html.push(_html);
+        }
+        wrap.innerHTML = html.join("");
+
+        /*设置随机海报显示居中*/
+        rsortPhoto(random([0,data.length]));
+    }
+
+    /*海报翻转*/
+    function trun(elem) {
+        var cls = elem.className;
+        if (/photo_back/.test(cls)) {
+            cls = cls.replace(/photo_back/, 'photo_front');
+        } else {
+            cls = cls.replace(/photo_front/, 'photo_back');
+        }
+        return elem.className = cls;
+    };
+    </script>
+</body>
+</html>
